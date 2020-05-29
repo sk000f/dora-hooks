@@ -1,4 +1,4 @@
-package gitlab
+package sonar
 
 import (
 	"net/http"
@@ -15,7 +15,7 @@ func HookHandler(w http.ResponseWriter, r *http.Request) {
 func InitRoutes() []metrix.Route {
 	r := []metrix.Route{
 		{
-			Path:    "/hook/gitlab",
+			Path:    "/hook/sonar",
 			Handler: HookHandler,
 			Method:  http.MethodPost,
 		},

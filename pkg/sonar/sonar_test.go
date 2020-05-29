@@ -1,4 +1,4 @@
-package gitlab_test
+package sonar_test
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/sk000f/metrix/pkg/gitlab"
+	"github.com/sk000f/metrix/pkg/sonar"
 
 	"github.com/sk000f/metrix/pkg/metrix"
 	"github.com/stretchr/testify/require"
@@ -17,19 +17,19 @@ var app metrix.App
 func TestMain(m *testing.M) {
 	// setup
 	app.Init()
-	app.AddRoutes(gitlab.InitRoutes())
+	app.AddRoutes(sonar.InitRoutes())
 
 	os.Exit(m.Run())
 
 	// teardown
 }
 
-func TestGitLabHooks(t *testing.T) {
-	t.Run("test initial GitLab endpoint", func(t *testing.T) {
+func TestSonarHooks(t *testing.T) {
+	t.Run("test base sonar hook endpoint", func(t *testing.T) {
 
 		assert := require.New(t)
 
-		req, err := http.NewRequest(http.MethodPost, "/hook/gitlab", nil)
+		req, err := http.NewRequest(http.MethodPost, "/hook/sonar", nil)
 		assert.NoError(err)
 
 		resp := executeRequest(req)
