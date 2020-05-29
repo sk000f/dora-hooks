@@ -22,23 +22,14 @@ func TestGitLabHooks(t *testing.T) {
 
 		assert := require.New(t)
 
-		srv := createTestServer("/hook/gitlab")
-
-		defer srv.Close()
-
-		req, err := http.NewRequest(http.MethodPost, srv.URL+"/hook/gitlab", nil)
+		req, err := http.NewRequest(http.MethodPost, "/hook/gitlab", nil)
 		assert.NoError(err)
 
-		client := &http.Client{}
-		resp, err := client.Do(req)
+		rr := httptest.NewRecorder()
+		handler := http.HandlerFunc(gitlab.HookHandler)
+		handler.ServeHTTP(rr, req)
 
 		assert.NoError(err)
-		assert.Equal(http.StatusOK, resp.StatusCode)
+		assert.Equal(http.StatusOK, rr.Code)
 	})
-}
-
-func createTestServer(path string) *httptest.Server {
-	mux := http.NewServeMux()
-	mux.HandleFunc(path, gitlab.HookHandler)
-	return httptest.NewServer(mux)
 }
