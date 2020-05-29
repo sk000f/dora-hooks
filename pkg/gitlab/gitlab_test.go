@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/sk000f/metrix/pkg/gitlab"
+
 	"github.com/stretchr/testify/require"
 )
 
@@ -37,10 +39,6 @@ func TestGitLabHooks(t *testing.T) {
 
 func createTestServer(path string) *httptest.Server {
 	mux := http.NewServeMux()
-	mux.HandleFunc(path, handler)
+	mux.HandleFunc(path, gitlab.HookHandler)
 	return httptest.NewServer(mux)
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(""))
 }
