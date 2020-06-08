@@ -41,7 +41,7 @@ func TestGitLabHooks(t *testing.T) {
 		{
 			"GitLab hook received with valid event header for Pipeline event",
 			http.Header{
-				gitlab.HookHeader: []string{gitlab.PipelineEvent},
+				gitlab.HookHeader: []string{"Pipeline Hook"},
 			},
 			http.StatusOK,
 		},
@@ -57,7 +57,7 @@ func TestGitLabHooks(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			t.Parallel()
+			//t.Parallel()
 
 			req, err := http.NewRequest(http.MethodPost, "/hook/gitlab", nil)
 			assert.NoError(err)

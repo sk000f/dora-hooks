@@ -33,7 +33,7 @@ func InitRoutes() []metrix.Route {
 }
 
 // HookHeader is the standard GitLab hook header
-const HookHeader = "X-GitLab-Event"
+const HookHeader = "X-Gitlab-Event"
 
 // PipelineEvent is the X-GitLab-Event header for pipeline hooks
 const PipelineEvent string = "Pipeline Hook"
