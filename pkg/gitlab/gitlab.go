@@ -6,8 +6,8 @@ import (
 	"github.com/sk000f/metrix/pkg/metrix"
 )
 
-// HookHandler handles webhooks received from GitLab
-func HookHandler(w http.ResponseWriter, r *http.Request) {
+// parse handles webhooks received from GitLab
+func parse(w http.ResponseWriter, r *http.Request) {
 	event := r.Header.Get("X-GitLab-Event")
 
 	if event == "dummy" {
@@ -21,7 +21,7 @@ func InitRoutes() []metrix.Route {
 	r := []metrix.Route{
 		{
 			Path:    "/hook/gitlab",
-			Handler: HookHandler,
+			Handler: parse,
 			Method:  http.MethodPost,
 		},
 	}
