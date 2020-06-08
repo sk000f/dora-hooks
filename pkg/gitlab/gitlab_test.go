@@ -25,18 +25,50 @@ func TestMain(m *testing.M) {
 }
 
 func TestGitLabHooks(t *testing.T) {
-	t.Run("test initial GitLab endpoint", func(t *testing.T) {
 
-		assert := require.New(t)
+	assert := require.New(t)
 
-		req, err := http.NewRequest(http.MethodPost, "/hook/gitlab", nil)
-		assert.NoError(err)
-		req.Header.Set("X-GitLab-Event", "dummy")
+	tests := []struct {
+		name     string
+		headers  http.Header
+		response int
+	}{
+		{
+			"GitLab hook received with no event header",
+			http.Header{},
+			http.StatusBadRequest,
+		},
+		{
+			"GitLab hook received with valid event header for Pipeline event",
+			http.Header{
+				gitlab.HookHeader: []string{gitlab.PipelineEvent},
+			},
+			http.StatusOK,
+		},
+		{
+			"GitLab hook received with invalid event header",
+			http.Header{
+				gitlab.HookHeader: []string{"invalid hook"},
+			},
+			http.StatusBadRequest,
+		},
+	}
 
-		resp := executeRequest(req)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 
-		assert.Equal(http.StatusOK, resp.Code)
-	})
+			t.Parallel()
+
+			req, err := http.NewRequest(http.MethodPost, "/hook/gitlab", nil)
+			assert.NoError(err)
+
+			req.Header = tt.headers
+
+			resp := executeRequest(req)
+
+			assert.Equal(tt.response, resp.Code)
+		})
+	}
 }
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
