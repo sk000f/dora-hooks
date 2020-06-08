@@ -31,6 +31,7 @@ func TestGitLabHooks(t *testing.T) {
 
 		req, err := http.NewRequest(http.MethodPost, "/hook/gitlab", nil)
 		assert.NoError(err)
+		req.Header.Set("X-GitLab-Event", "dummy")
 
 		resp := executeRequest(req)
 

@@ -8,7 +8,12 @@ import (
 
 // HookHandler handles webhooks received from GitLab
 func HookHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	event := r.Header.Get("X-GitLab-Event")
+
+	if event == "dummy" {
+		w.WriteHeader(http.StatusOK)
+	}
+	w.WriteHeader(http.StatusBadRequest)
 }
 
 // InitRoutes sets up routes for GitLab hooks
