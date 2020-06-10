@@ -3,6 +3,7 @@ package gitlab
 import (
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 
@@ -10,17 +11,17 @@ import (
 )
 
 // ParseEvent processes the JSON event body and returns event object or an error
-func ParseEvent(r *http.Request) (interface{}, error) {
+func ParseEvent(e io.ReadCloser) (interface{}, error) {
 
-	if r.Body == nil {
+	if e == nil {
 		return nil, errors.New("missing event data")
 	}
 
 	defer func() {
-		_ = r.Body.Close()
+		_ = e.Close()
 	}()
 
-	eventData, err := ioutil.ReadAll(r.Body)
+	eventData, err := ioutil.ReadAll(e)
 	if err != nil {
 		// error reading event data
 		return nil, err
@@ -39,7 +40,7 @@ func handleEvent(w http.ResponseWriter, r *http.Request) {
 
 	switch event {
 	case PipelineEvent:
-		_, err := ParseEvent(r)
+		_, err := ParseEvent(r.Body)
 		fmt.Println(err)
 		w.WriteHeader(http.StatusOK)
 	default:
