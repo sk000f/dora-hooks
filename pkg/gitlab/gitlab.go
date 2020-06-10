@@ -67,3 +67,9 @@ const HookHeader = "X-Gitlab-Event"
 
 // PipelineEvent is the X-GitLab-Event header for pipeline hooks
 const PipelineEvent string = "Pipeline Hook"
+
+// package specific errors
+const (
+	ErrInvalidGitlabHeader   = metrix.Error("invalid X-Gitlab-Event header value")
+	ErrMissingGitlabHookData = metrix.Error("missing Gitlab hook data")
+)

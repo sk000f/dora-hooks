@@ -7,6 +7,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// App represents server with dependencies
+type App struct {
+	Router *mux.Router
+}
+
 // Route represents a route attached to the mux
 type Route struct {
 	Path    string
@@ -14,9 +19,11 @@ type Route struct {
 	Method  string
 }
 
-// App represents server with dependencies
-type App struct {
-	Router *mux.Router
+// Error represents application-wide error
+type Error string
+
+func (e Error) Error() string {
+	return string(e)
 }
 
 // Init configures server with routes and injected dependencies

@@ -76,14 +76,25 @@ func TestGitLabHookPipelineEvent(t *testing.T) {
 		name         string
 		headers      http.Header
 		dataPath     string
+		err          metrix.Error
 		responseCode int
 	}{
 		{
-			"valid GitLab pipeline event",
+			"GitLab pipeline event with valid data",
 			http.Header{
 				gitlab.HookHeader: []string{gitlab.PipelineEvent},
 			},
 			"./testdata/pipelineEvent.json",
+			"",
+			http.StatusOK,
+		},
+		{
+			"GitLab pipeline event with empty data",
+			http.Header{
+				gitlab.HookHeader: []string{gitlab.PipelineEvent},
+			},
+			"./testdata/invalidEvent.json",
+			gitlab.ErrMissingGitlabHookData,
 			http.StatusOK,
 		},
 	}
