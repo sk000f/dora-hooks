@@ -93,6 +93,9 @@ func TestGitLabHookPipelineEvent(t *testing.T) {
 
 			data, err := os.Open(tt.dataPath)
 			assert.NoError(err)
+			defer func() {
+				_ = data.Close()
+			}()
 
 			req, err := http.NewRequest(http.MethodPost, "/hook/gitlab", data)
 			assert.NoError(err)
