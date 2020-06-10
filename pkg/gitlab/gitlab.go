@@ -46,6 +46,7 @@ func handleEvent(w http.ResponseWriter, r *http.Request) {
 	default:
 		// log out message the hook event is invalid
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(ErrInvalidGitlabHeader))
 	}
 }
 

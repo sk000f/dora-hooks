@@ -1,6 +1,7 @@
 package gitlab_test
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -32,11 +33,13 @@ func TestGitLabHookHeaders(t *testing.T) {
 		name         string
 		headers      http.Header
 		responseCode int
+		err          metrix.Error
 	}{
 		{
 			"GitLab hook received with no event header",
 			http.Header{},
 			http.StatusBadRequest,
+			gitlab.ErrInvalidGitlabHeader,
 		},
 		{
 			"GitLab hook received with valid event header for Pipeline event",
@@ -44,6 +47,7 @@ func TestGitLabHookHeaders(t *testing.T) {
 				gitlab.HookHeader: []string{gitlab.PipelineEvent},
 			},
 			http.StatusOK,
+			"",
 		},
 		{
 			"GitLab hook received with invalid event header",
@@ -51,6 +55,7 @@ func TestGitLabHookHeaders(t *testing.T) {
 				gitlab.HookHeader: []string{"invalid hook"},
 			},
 			http.StatusBadRequest,
+			gitlab.ErrInvalidGitlabHeader,
 		},
 	}
 
@@ -64,7 +69,11 @@ func TestGitLabHookHeaders(t *testing.T) {
 
 			resp := executeRequest(req)
 
+			respData, err := ioutil.ReadAll(resp.Body)
+			assert.NoError(err)
+
 			assert.Equal(tt.responseCode, resp.Code)
+			assert.Equal(tt.err.Error(), string(respData))
 		})
 	}
 }
