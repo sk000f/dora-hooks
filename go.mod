@@ -1,4 +1,4 @@
-module github.com/sk000f/metrix
+module github.com/sk000f/metrix-hooks
 
 go 1.13
 
